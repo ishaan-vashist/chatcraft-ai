@@ -49,6 +49,10 @@ Thumbs.db
 # Docker volumes
 /data/
 
+# Docker configuration
+docker-compose.yml
+.env.docker
+
 # Temporary files
 *.tmp
 *.temp
