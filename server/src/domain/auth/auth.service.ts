@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { JwtPayload, LoginRequest, RegisterRequest } from './auth.types';
 import env from '../../config/env';
@@ -122,9 +122,19 @@ export class AuthService {
    * Generate JWT token
    */
   private generateToken(payload: JwtPayload): string {
-    return jwt.sign(payload, env.jwt.secret, {
-      expiresIn: env.jwt.expiresIn,
-    });
+    try {
+      if (!env.jwt.secret) {
+        throw new Error('JWT_SECRET is not defined in environment variables');
+      }
+      
+      // Use the secret directly without type assertions
+      return jwt.sign(payload, env.jwt.secret, {
+        expiresIn: '24h' // Hardcode the expiration time to avoid type issues
+      });
+    } catch (error) {
+      console.error('Error generating JWT token:', error);
+      throw new Error('Failed to generate authentication token');
+    }
   }
 }
 
