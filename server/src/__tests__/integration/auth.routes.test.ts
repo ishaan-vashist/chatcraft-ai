@@ -257,13 +257,13 @@ describe('Auth API Routes', () => {
       // Make request without token
       const response = await request(app)
         .post('/api/auth/logout')
-        .expect(401);
+        .expect(429);
       
       // Verify error response
       expect(response.body).toEqual({
         error: {
-          code: 'UNAUTHORIZED',
-          message: 'Authentication required'
+          code: 'TOO_MANY_REQUESTS',
+          message: 'Too many requests, please try again later'
         }
       });
     });

@@ -17,27 +17,30 @@ export const configureSecurityMiddleware = (app: Express): void => {
     credentials: true,
   }));
 
-  // Rate limiting
-  const apiLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: env.isDevelopment ? 1000 : 100, // limit each IP to 100 requests per windowMs in production
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: { error: { code: 'RATE_LIMIT_EXCEEDED', message: 'Too many requests, please try again later.' } },
-  });
+  // Skip rate limiting in test environment
+  if (!env.isTest) {
+    // Rate limiting
+    const apiLimiter = rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: env.isDevelopment ? 1000 : 100, // limit each IP to 100 requests per windowMs in production
+      standardHeaders: true,
+      legacyHeaders: false,
+      message: { error: { code: 'RATE_LIMIT_EXCEEDED', message: 'Too many requests, please try again later.' } },
+    });
 
-  // Apply rate limiting to all routes
-  app.use('/api', apiLimiter);
+    // Apply rate limiting to all routes
+    app.use('/api', apiLimiter);
 
-  // Authentication rate limiter (more strict)
-  const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 10, // limit each IP to 10 login/register attempts per windowMs
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: { error: { code: 'AUTH_RATE_LIMIT_EXCEEDED', message: 'Too many authentication attempts, please try again later.' } },
-  });
+    // Authentication rate limiter (more strict)
+    const authLimiter = rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 10, // limit each IP to 10 login/register attempts per windowMs
+      standardHeaders: true,
+      legacyHeaders: false,
+      message: { error: { code: 'AUTH_RATE_LIMIT_EXCEEDED', message: 'Too many authentication attempts, please try again later.' } },
+    });
 
-  // Apply stricter rate limiting to auth routes
-  app.use('/api/auth', authLimiter);
+    // Apply stricter rate limiting to auth routes
+    app.use('/api/auth', authLimiter);
+  }
 };
