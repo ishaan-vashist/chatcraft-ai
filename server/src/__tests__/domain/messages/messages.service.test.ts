@@ -1,3 +1,4 @@
+/// <reference types="jest" />
 // Import the mock first to ensure it's loaded before any other imports
 import { mockPrisma } from '../../utils/prisma-mock';
 

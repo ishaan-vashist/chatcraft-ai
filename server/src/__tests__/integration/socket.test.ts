@@ -1,14 +1,15 @@
+/// <reference types="jest" />
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { AddressInfo } from 'net';
 import { io as ioc, Socket as ClientSocket } from 'socket.io-client';
 import jwt from 'jsonwebtoken';
-import { setupSocketIO } from '../../../src/sockets/index';
+import { setupSocketIO } from '../../sockets/index';
 import { mockUsers } from '../utils/mocks';
 
 // Mock JWT verification
 jest.mock('jsonwebtoken');
-jest.mock('../../../src/domain/auth/auth.middleware', () => ({
+jest.mock('../../domain/auth/auth.middleware', () => ({
   verifyJwtToken: jest.fn().mockImplementation((token) => {
     if (token === 'valid_token') {
       return Promise.resolve({ id: '1', email: 'user1@example.com' });

@@ -72,13 +72,16 @@ REACT_APP_WEBSOCKET_URL=ws://localhost:4000
 1. **Registration**:
    - Collect user email, password, and name
    - Submit to `/api/auth/register`
-   - Store returned JWT token in secure HTTP-only cookie
+   - Server responds with Set-Cookie to set a secure, HttpOnly, SameSite=None cookie (JWT/session)
+   - Frontend never reads/writes this cookie; it relies on `withCredentials`
+   - Ensure CSRF protection (double-submit/XSRF cookie + header or same-origin POST + CSRF token)
 
 2. **Login**:
    - Collect user email and password
    - Submit to `/api/auth/login`
-   - Store returned JWT token in secure HTTP-only cookie
-
+   - Server responds with Set-Cookie to set a secure, HttpOnly, SameSite=None cookie (JWT/session)
+   - Frontend never reads/writes this cookie; it relies on `withCredentials`
+   - Ensure CSRF protection (double-submit/XSRF cookie + header or same-origin POST + CSRF token)
 3. **Authentication State**:
    - On app load, call `/api/auth/me` to check if user is authenticated
    - Store user data in application state

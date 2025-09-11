@@ -2,8 +2,10 @@ import crypto from 'crypto';
 import env from '../../config/env';
 
 /**
- * Encryption service for message content using AES-256-GCM
- */
+  /**
+  /**
+   * Encryption service for message content using AES-256-CBC
+   */
 export class CryptoService {
   private readonly algorithm = 'aes-256-cbc';
   private readonly key: Buffer;

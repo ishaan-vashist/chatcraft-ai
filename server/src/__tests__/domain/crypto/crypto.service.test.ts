@@ -1,3 +1,5 @@
+/// <reference types="jest" />
+
 describe('CryptoService', () => {
   // Create a simple mock implementation for testing
   class MockCryptoService {

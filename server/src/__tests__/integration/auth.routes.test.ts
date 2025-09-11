@@ -1,8 +1,9 @@
+/// <reference types="jest" />
 // Import the mock first to ensure it's loaded before any other imports
 import { mockPrisma } from '../utils/prisma-mock';
 
 import request from 'supertest';
-import { app } from '../../../src/app';
+import { app } from '../../app';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { mockUsers } from '../utils/mocks';
