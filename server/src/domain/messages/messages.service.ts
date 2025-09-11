@@ -60,10 +60,50 @@ export class MessagesService {
       senderId: message.senderId,
       type: message.type,
       // Decrypt the message content
-      content: cryptoService.decrypt(
-        Buffer.isBuffer(message.ciphertext) ? message.ciphertext : Buffer.from(message.ciphertext),
-        Buffer.isBuffer(message.nonce) ? message.nonce : Buffer.from(message.nonce)
-      ),
+      content: (() => {
+        try {
+          // Ensure nonce is properly formatted - must be exactly 16 bytes for AES-CBC
+          let nonceBuffer: Buffer;
+          if (Buffer.isBuffer(message.nonce)) {
+            nonceBuffer = message.nonce;
+          } else {
+            try {
+              nonceBuffer = Buffer.from(typeof message.nonce === 'string' 
+                ? message.nonce 
+                : Buffer.from(message.nonce).toString('base64'), 'base64');
+            } catch (e) {
+              console.error('Failed to convert nonce to buffer:', e);
+              return '[Decryption failed: Invalid nonce format]';
+            }
+          }
+          
+          // Validate nonce length
+          if (nonceBuffer.length !== 16) {
+            console.error(`Invalid nonce length: ${nonceBuffer.length}, expected 16 bytes`);
+            return '[Decryption failed: Invalid nonce length]';
+          }
+          
+          // Prepare ciphertext buffer
+          let ciphertextBuffer: Buffer;
+          if (Buffer.isBuffer(message.ciphertext)) {
+            ciphertextBuffer = message.ciphertext;
+          } else {
+            try {
+              ciphertextBuffer = Buffer.from(typeof message.ciphertext === 'string' 
+                ? message.ciphertext 
+                : Buffer.from(message.ciphertext).toString('base64'), 'base64');
+            } catch (e) {
+              console.error('Failed to convert ciphertext to buffer:', e);
+              return '[Decryption failed: Invalid ciphertext format]';
+            }
+          }
+          
+          return cryptoService.decrypt(ciphertextBuffer, nonceBuffer);
+        } catch (error) {
+          console.error('Message decryption error:', error);
+          return '[Decryption failed]';
+        }
+      })(),
       createdAt: message.createdAt.toISOString(),
       sender: {
         id: message.sender.id,

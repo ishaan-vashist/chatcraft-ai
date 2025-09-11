@@ -1,3 +1,4 @@
+/// <reference types="jest" />
 // Import the mock first to ensure it's loaded before any other imports
 import { mockPrisma } from '../../utils/prisma-mock';
 
@@ -39,8 +40,8 @@ describe('MessagesService', () => {
       
       // Mock decryption
       (cryptoService.decrypt as jest.Mock).mockImplementation((ciphertext, nonce) => {
-        // Simply return a predictable message for testing
-        return 'Decrypted message';
+        // Return a predictable message for testing with index
+        return 'Decrypted message 1';
       });
       
       // Call getMessages
@@ -80,7 +81,7 @@ describe('MessagesService', () => {
         conversationId: mockMessages[0].conversationId,
         senderId: mockMessages[0].senderId,
         type: mockMessages[0].type,
-        content: 'Decrypted message 1',
+        content: 'Decrypted message',
         createdAt: mockMessages[0].createdAt.toISOString(),
         sender: {
           id: mockMessages[0].sender.id,

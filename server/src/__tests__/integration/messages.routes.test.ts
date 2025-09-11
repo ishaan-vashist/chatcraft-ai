@@ -1,15 +1,16 @@
+/// <reference types="jest" />
 // Import the mock first to ensure it's loaded before any other imports
 import { mockPrisma } from '../utils/prisma-mock';
 
 import request from 'supertest';
-import { app } from '../../../src/app';
+import { app } from '../../app';
 import jwt from 'jsonwebtoken';
 import { mockUsers, mockMessages } from '../utils/mocks';
-import { cryptoService } from '../../../src/domain/crypto/crypto.service';
+import { cryptoService } from '../../domain/crypto/crypto.service';
 
 jest.mock('jsonwebtoken');
 
-jest.mock('../../../src/domain/crypto/crypto.service', () => ({
+jest.mock('../../domain/crypto/crypto.service', () => ({
   cryptoService: {
     encrypt: jest.fn(),
     decrypt: jest.fn()

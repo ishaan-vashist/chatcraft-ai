@@ -10,6 +10,10 @@ jest.mock('../../../config/env', () => {
   };
 });
 
+// Mock the actual env module for specific tests
+const mockEnvModule = jest.requireActual('../../../config/env');
+
+
 jest.mock('../../../domain/ai/providers/openai');
 
 // Import after mocks
@@ -55,11 +59,30 @@ describe('AiService', () => {
     });
     
     it('should throw error if OpenAI API key is not provided', () => {
-      // Remove API key
-      delete process.env.OPENAI_API_KEY;
+      // Mock the env module to return undefined for openaiApiKey
+      jest.resetModules();
+      
+      // Save original module
+      const originalModule = jest.requireMock('../../../config/env');
+      
+      // Override the mock for this test
+      jest.doMock('../../../config/env', () => ({
+        __esModule: true,
+        default: {
+          ai: {
+            openaiApiKey: undefined
+          }
+        }
+      }), { virtual: true });
+      
+      // Re-import the AiService to use the new mock
+      const { AiService } = require('../../../domain/ai/ai.service');
       
       // Should throw when creating service
       expect(() => new AiService()).toThrow('OPENAI_API_KEY not provided');
+      
+      // Restore original mock
+      jest.doMock('../../../config/env', () => originalModule, { virtual: true });
     });
   });
   

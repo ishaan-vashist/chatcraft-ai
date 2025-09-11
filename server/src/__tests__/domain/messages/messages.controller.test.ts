@@ -1,3 +1,4 @@
+/// <reference types="jest" />
 import { MessagesController } from '../../../domain/messages/messages.controller';
 import { messagesService } from '../../../domain/messages/messages.service';
 import { mockRequest, mockResponse, mockMessages } from '../../utils/mocks';

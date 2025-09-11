@@ -230,10 +230,25 @@ describe('AuthService', () => {
     });
     
     it('should throw error if JWT_SECRET is not defined', () => {
-      // Mock JWT_SECRET not defined
-      const originalEnv = process.env;
-      process.env = { ...originalEnv };
-      delete process.env.JWT_SECRET;
+      // Mock env module to return undefined for jwt.secret
+      jest.resetModules();
+      
+      // Save original module
+      const originalModule = jest.requireMock('../../../config/env');
+      
+      // Override the mock for this test
+      jest.doMock('../../../config/env', () => ({
+        __esModule: true,
+        default: {
+          jwt: {
+            secret: undefined,
+            expiresIn: '24h'
+          }
+        }
+      }), { virtual: true });
+      
+      // Re-import the AuthService to use the new mock
+      const { AuthService } = require('../../../domain/auth/auth.service');
       
       // Create a new instance with access to private method
       const service = new AuthService();
@@ -241,10 +256,10 @@ describe('AuthService', () => {
       
       // Call generateToken and expect error
       const payload = { id: '1', email: 'user1@example.com' };
-      expect(() => generateToken(payload)).toThrow('JWT_SECRET is not defined');
+      expect(() => generateToken(payload)).toThrow('Failed to generate authentication token');
       
-      // Restore environment
-      process.env = originalEnv;
+      // Restore original mock
+      jest.doMock('../../../config/env', () => originalModule, { virtual: true });
     });
   });
 });

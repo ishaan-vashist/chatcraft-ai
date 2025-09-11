@@ -1,3 +1,4 @@
+/// <reference types="jest" />
 import { AuthController } from '../../../domain/auth/auth.controller';
 import { authService } from '../../../domain/auth/auth.service';
 import { mockRequest, mockResponse } from '../../utils/mocks';
