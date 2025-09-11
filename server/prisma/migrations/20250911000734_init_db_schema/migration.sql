@@ -15,7 +15,7 @@ CREATE TABLE "Conversation" (
     "isGroup" BOOLEAN NOT NULL DEFAULT false,
     "retentionDays" INTEGER NOT NULL DEFAULT 30,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
+    CONSTRAINT "conversation_retentionDays_nonneg" CHECK ("retentionDays" >= 0),
     CONSTRAINT "Conversation_pkey" PRIMARY KEY ("id")
 );
 

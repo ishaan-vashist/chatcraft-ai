@@ -230,8 +230,8 @@ describe('Database Integration Tests', () => {
           conversationId: testConversationId,
           senderId: testUserId1,
           type: 'text',
-          ciphertext: Buffer.from('encrypted-message') as unknown as Uint8Array,
-          nonce: Buffer.from('test-nonce') as unknown as Uint8Array
+          ciphertext: new Uint8Array(Buffer.from('encrypted-message')),
+          nonce: new Uint8Array(Buffer.from('test-nonce'))
         }
       });
       
@@ -255,15 +255,15 @@ describe('Database Integration Tests', () => {
             conversationId: testConversationId,
             senderId: testUserId1,
             type: 'text',
-            ciphertext: Buffer.from('encrypted-message-2') as unknown as Uint8Array,
-            nonce: Buffer.from('test-nonce-2') as unknown as Uint8Array
+            ciphertext: new Uint8Array(Buffer.from('encrypted-message-2')),
+            nonce: new Uint8Array(Buffer.from('test-nonce-2'))
           },
           {
             conversationId: testConversationId,
             senderId: testUserId2,
             type: 'text',
-            ciphertext: Buffer.from('encrypted-message-3') as unknown as Uint8Array,
-            nonce: Buffer.from('test-nonce-3') as unknown as Uint8Array
+            ciphertext: new Uint8Array(Buffer.from('encrypted-message-3')),
+            nonce: new Uint8Array(Buffer.from('test-nonce-3'))
           }
         ]
       });
@@ -297,8 +297,8 @@ describe('Database Integration Tests', () => {
     });
   });
   
-  describe('Cascade delete operations', () => {
-    test('should delete conversation and cascade to messages and participants', async () => {
+  describe('Manual deletion operations', () => {
+    test('should manually delete conversation and related records', async () => {
       // Count messages before delete
       const messagesBefore = await prisma.message.count({
         where: { conversationId: testConversationId }
@@ -311,7 +311,7 @@ describe('Database Integration Tests', () => {
       });
       expect(participantsBefore).toBeGreaterThan(0);
       
-      // Delete messages first (since there's no cascade delete in test environment)
+      // Delete messages first (manual deletion since cascade is not configured)
       await prisma.message.deleteMany({
         where: { conversationId: testConversationId }
       });

@@ -30,7 +30,7 @@ For testing, we recommend creating a `.env.test` file with the following content
 # Server
 PORT=4001
 NODE_ENV=test
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/relatim_test
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/chatcraft_test
 JWT_SECRET=test-jwt-secret
 ENCRYPTION_KEY_HEX=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
 
