@@ -6,8 +6,8 @@ services:
     container_name: relatim-postgres
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: relatim
+      POSTGRES_PASSWORD: ishaan1221
+      POSTGRES_DB: chatcraft
     ports:
       - "5432:5432"
     volumes:
