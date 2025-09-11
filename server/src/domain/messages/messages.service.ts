@@ -59,8 +59,11 @@ export class MessagesService {
       conversationId: message.conversationId,
       senderId: message.senderId,
       type: message.type,
-      // In a real implementation, this would decrypt the message content
-      content: cryptoService.decrypt(message.ciphertext, message.nonce),
+      // Decrypt the message content
+      content: cryptoService.decrypt(
+        Buffer.isBuffer(message.ciphertext) ? message.ciphertext : Buffer.from(message.ciphertext),
+        Buffer.isBuffer(message.nonce) ? message.nonce : Buffer.from(message.nonce)
+      ),
       createdAt: message.createdAt.toISOString(),
       sender: {
         id: message.sender.id,
